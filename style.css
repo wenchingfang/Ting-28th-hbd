@@ -1,0 +1,205 @@
+/* --- 全局設定與字體 --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Yusei Magic", sans-serif;
+    margin: 0;
+    background-color: #1a1a2e;
+    color: #f0f0f0;
+    overflow: hidden; /* 避免產生捲軸 */
+}
+
+/* --- 【強化】頁面容器通用樣式，確保所有內容預設置中 --- */
+#landing-page,
+#intro-video-page,
+#slideshow-page,
+#final-letter-page,
+#outro-video-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直置中 */
+    align-items: center;   /* 水平置中 */
+    text-align: center;    /* 【新增】讓容器內的文字也預設置中 */
+    transition: opacity 0.5s ease-in-out;
+    padding: 15px; /* 【微調】稍微調整內距，適應手機螢幕 */
+}
+
+/* --- 1. 開頭登陸頁面樣式 --- */
+#landing-page h1 {
+    /* 【優化】使用 clamp() 讓字體在手機上自動縮放，更具響應性 */
+    /* clamp(最小值, 理想值, 最大值) */
+    font-size: clamp(2.5em, 10vw, 4em); 
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    margin-bottom: 30px;
+}
+
+#enter-button {
+    font-family: "Yusei Magic", sans-serif;
+    font-size: 1.5em;
+    padding: 15px 40px;
+    border-radius: 50px;
+    border: 2px solid #e94560;
+    background-color: transparent;
+    color: #e94560;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+#enter-button:hover {
+    background-color: #e94560;
+    color: #1a1a2e;
+    transform: scale(1.1);
+}
+
+.mute-option {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    user-select: none;
+    max-width: 90%; /* 避免在手機上換行得太奇怪 */
+}
+
+.mute-option:hover {
+    color: rgba(255, 255, 255, 1);
+    text-decoration: underline;
+}
+
+/* --- 2 & 5. 影片頁面樣式 --- */
+#intro-video,
+#outro-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 讓影片填滿整個背景 */
+}
+
+/* --- 3. 幻燈片頁面樣式 --- */
+.media-viewer {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    width: 95%; /* 【微調】在手機上寬度佔比更高一些 */
+    max-width: 800px;
+    text-align: center;
+}
+
+.media-container {
+    width: 100%;
+    height: 60vh;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#slideshow-image,
+#slideshow-video {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    object-fit: contain; /* 【新增】確保長方形圖片或影片不會被裁切 */
+}
+
+#media-caption {
+    font-size: 1.2em;
+    min-height: 40px;
+    color: #f0f0f0;
+}
+
+.navigation-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center; /* 這個已經是置中的寫法，很好！ */
+    align-items: center;
+    gap: 20px;
+}
+
+#prev-button,
+#next-button,
+#show-outro-button {
+    font-family: "Yusei Magic", sans-serif;
+    font-size: 1em;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 1px solid #f0f0f0;
+    background: transparent;
+    color: #f0f0f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#prev-button:hover,
+#next-button:hover,
+#show-outro-button:hover {
+    background: #f0f0f0;
+    color: #1a1a2e;
+}
+
+#show-outro-button {
+    margin-top: 20px; /* 這個按鈕會和導覽按鈕一起被 flexbox 置中 */
+    border-color: #e94560;
+    color: #e94560;
+}
+
+#show-outro-button:hover {
+    background-color: #e94560;
+    color: #1a1a2e;
+}
+
+/* --- 4. 最終文字頁面的樣式 --- */
+#final-letter-page .letter-content {
+    background: rgba(0, 0, 0, 0.3);
+    /* 【優化】調整內距，讓手機版面更舒適 */
+    padding: 30px 25px; 
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    width: 95%; /* 【微調】在手機上寬度佔比更高一些 */
+    max-width: 700px;
+    max-height: 85vh; /* 【新增】增加最大高度並允許滾動，避免信件太長時在手機上超出畫面 */
+    overflow-y: auto; /* 【新增】如果內容超出，可以滾動 */
+}
+
+#final-letter-page h2 {
+    font-size: 2em;
+    color: #e94560;
+    text-align: center; /* 確保標題置中 */
+    margin-bottom: 25px;
+}
+
+#final-letter-page p {
+    font-size: 1.1em;
+    line-height: 1.8;
+    color: #f0f0f0;
+    margin-bottom: 20px;
+    text-align: left; /* 【保留】刻意保留靠左對齊，模仿信件閱讀感 */
+}
+
+/* 【強化】確保這個按鈕永遠水平置中 */
+#show-final-video-button {
+    font-family: "Yusei Magic", sans-serif;
+    font-size: 1em;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 1px solid #f0f0f0;
+    background: transparent;
+    color: #f0f0f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block; /* 設為區塊元素 */
+    margin: 30px auto 0; /* 使用 auto 外距來達成水平置中 */
+}
+
+#show-final-video-button:hover {
+    background: #f0f0f0;
+    color: #1a1a2e;
+}
