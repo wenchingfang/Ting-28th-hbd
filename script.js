@@ -66,122 +66,95 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 步驟 2: 狀態變數 ---
     let currentIndex = 0;
-    let isMuted = false;
+    
 
-    // --- 步驟 2.5: 智慧音量調整函式 ---
-    function fadeVolume(audioElement, targetVolume, duration = 400) {
-        if (!audioElement) return;
-        const startVolume = audioElement.volume;
-        if (startVolume === targetVolume) return;
-        let start = null;
-        function step(timestamp) {
-            if (!start) start = timestamp;
-            const progress = timestamp - start;
-            const percentage = Math.min(progress / duration, 1);
-            audioElement.volume = startVolume + (targetVolume - startVolume) * percentage;
-            if (progress < duration) {
-                window.requestAnimationFrame(step);
-            } else {
-                audioElement.volume = targetVolume;
-            }
-        }
-        window.requestAnimationFrame(step);
-    }
-
-    // --- 步驟 3: 主要功能函式 ---
-    function displaySlideshowMedia(index) {
+function displaySlideshowMedia(index) {
         const item = slideshowMedia[index];
+        slideshowImage.style.display = 'none';
+        slideshowVideo.style.display = 'none';
+        slideshowVideo.pause(); // 切換時先暫停，避免還在播放
+
         if (item.type === 'image') {
             slideshowImage.src = item.src;
             slideshowImage.style.display = 'block';
-            slideshowVideo.style.display = 'none';
-            if (slideshowVideo) slideshowVideo.pause();
-            if (!isMuted) fadeVolume(backgroundMusic, MUSIC_FULL_VOLUME);
+            backgroundMusic.volume = MUSIC_FULL_VOLUME; // 如果是圖片，確保背景音樂是最大聲
         } else if (item.type === 'video') {
             slideshowVideo.src = item.src;
             slideshowVideo.style.display = 'block';
-            slideshowImage.style.display = 'none';
-            slideshowVideo.play();
-            if (!isMuted) fadeVolume(backgroundMusic, MUSIC_DUCK_VOLUME);
+            slideshowVideo.muted = false; // 確保這個影片不是靜音的
+            backgroundMusic.volume = MUSIC_DUCK_VOLUME; // 預先降低背景音樂音量，準備讓使用者播放影片
         }
+
         mediaCaption.textContent = item.caption || '';
         
-        // 【唯一的修正點】將變數名稱 showLetterButton 改為 showOutroButton
-        if (index === slideshowMedia.length - 1) {
-            showOutroButton.style.display = 'block';
-        } else {
-            showOutroButton.style.display = 'none';
-        }
+        // 【優化】線性的導覽按鈕，不是無限循環
+        prevButton.style.display = (index === 0) ? 'none' : 'inline-block';
+        nextButton.style.display = (index === slideshowMedia.length - 1) ? 'none' : 'inline-block';
+        showOutroButton.style.display = (index === slideshowMedia.length - 1) ? 'block' : 'none';
     }
 
-    // --- 步驟 4: 註冊所有按鈕和事件 ---
-    muteToggle.addEventListener('click', () => {
-        isMuted = !isMuted;
-        if (isMuted) {
-            muteToggle.textContent = '🔊 已設為靜音，點此切換為有聲';
-            if (backgroundMusic) backgroundMusic.pause();
-        } else {
-            muteToggle.textContent = '🔇 預設有聲音，點此切換為靜音';
-            if (backgroundMusic && introVideoPage.style.display === 'none') backgroundMusic.play();
-        }
-    });
+    // --- 註冊所有按鈕和事件 ---
 
+    // 1. 主進入按鈕：開始整個體驗
     enterButton.addEventListener('click', () => {
         landingPage.style.display = 'none';
-        introVideoPage.style.display = 'block';
-        introVideo.muted = isMuted;
-        if (!isMuted) {
-            if (backgroundMusic) backgroundMusic.play();
-            if (!introVideo.muted) {
-                fadeVolume(backgroundMusic, MUSIC_DUCK_VOLUME);
-            }
-        }
+        introVideoPage.style.display = 'flex';
+
+        // 嘗試同時播放背景音樂和（已靜音的）開頭影片
+        backgroundMusic.play().catch(error => console.error("背景音樂播放失敗:", error));
         introVideo.play().catch(error => console.error("開頭影片播放失敗:", error));
     });
 
+    // 2. 靜音切換按鈕：功能單純化
+    muteToggle.addEventListener('click', () => {
+        backgroundMusic.muted = !backgroundMusic.muted;
+        muteToggle.textContent = backgroundMusic.muted ? '▶️ 已靜音，點此開啟音樂' : '🔇 音樂播放中，點此靜音';
+    });
+
+    // 3. 開頭影片結束後，自動進入幻燈片
     introVideo.addEventListener('ended', () => {
         introVideoPage.style.display = 'none';
-        slideshowPage.style.display = 'block';
-        displaySlideshowMedia(0);
-        if (slideshowMedia[0].type === 'image' && !isMuted) {
-            fadeVolume(backgroundMusic, MUSIC_FULL_VOLUME);
-        }
+        slideshowPage.style.display = 'flex';
+        displaySlideshowMedia(currentIndex);
     });
     
-    if(slideshowVideo) {
-        slideshowVideo.addEventListener('ended', () => {
-            if (!isMuted) fadeVolume(backgroundMusic, MUSIC_FULL_VOLUME);
-            if (currentIndex === slideshowMedia.length - 1) {
-                // 【唯一的修正點】將變數名稱 showLetterButton 改為 showOutroButton
-                showOutroButton.style.display = 'block';
-            }
-        });
-        slideshowVideo.addEventListener('pause', () => { if (!isMuted) fadeVolume(backgroundMusic, MUSIC_FULL_VOLUME); });
-        slideshowVideo.addEventListener('play', () => { if (!isMuted) fadeVolume(backgroundMusic, MUSIC_DUCK_VOLUME); });
-    }
+    // 4. 【核心】音訊閃避 (Audio Ducking) 邏輯
+    slideshowVideo.addEventListener('play', () => {
+        backgroundMusic.volume = MUSIC_DUCK_VOLUME; // 影片播放時，背景音樂變小聲
+    });
+    slideshowVideo.addEventListener('pause', () => {
+        backgroundMusic.volume = MUSIC_FULL_VOLUME; // 影片暫停時，恢復背景音樂音量
+    });
+    slideshowVideo.addEventListener('ended', () => {
+        backgroundMusic.volume = MUSIC_FULL_VOLUME; // 影片結束時，恢復背景音樂音量
+    });
 
+    // 5. 幻燈片導覽按鈕
     prevButton.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + slideshowMedia.length) % slideshowMedia.length;
-        displaySlideshowMedia(currentIndex);
+        if (currentIndex > 0) {
+            currentIndex--;
+            displaySlideshowMedia(currentIndex);
+        }
     });
 
     nextButton.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % slideshowMedia.length;
-        displaySlideshowMedia(currentIndex);
+        if (currentIndex < slideshowMedia.length - 1) {
+            currentIndex++;
+            displaySlideshowMedia(currentIndex);
+        }
     });
 
-    // 【唯一的修正點】將變數名稱 showLetterButton 改為 showOutroButton
+    // 6. 顯示信件按鈕
     showOutroButton.addEventListener('click', () => {
         slideshowPage.style.display = 'none';
-        finalLetterPage.style.display = 'block';
-        if (!isMuted) fadeVolume(backgroundMusic, MUSIC_FULL_VOLUME);
+        finalLetterPage.style.display = 'flex';
+        backgroundMusic.volume = MUSIC_FULL_VOLUME; // 確保看信時音樂是正常音量
     });
 
+    // 7. 顯示最終影片按鈕
     showFinalVideoButton.addEventListener('click', () => {
         finalLetterPage.style.display = 'none';
-        outroVideoPage.style.display = 'block';
-        fadeVolume(backgroundMusic, 0, 1000);
-        setTimeout(() => { if (backgroundMusic) backgroundMusic.pause(); }, 1000);
-        outroVideo.play().catch(error => console.error("結局影片播放失敗:", error));
+        outroVideoPage.style.display = 'flex';
+        backgroundMusic.pause(); // 播放最後影片前，完全暫停背景音樂
     });
 });
