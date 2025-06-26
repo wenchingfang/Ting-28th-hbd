@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
-<head>
 <head>
   <meta charset="UTF-8">
   <title>給最棒的大姐！</title>
@@ -14,21 +12,21 @@
 
 <body>
 
-    <div id="landing-page">
-        <h1>給全世界最棒的方大姐🥰</h1>
-        <button id="enter-button">28歲就此開始</button>
-        <p id="mute-toggle" class="mute-option">🔇 預設有聲音，點此切換為靜音，建議翻轉螢幕獲得更好體驗（ㄏㄏ）</p>
-    </div>
+  <div id="landing-page">
+    <h1>給全世界最棒的方大姐🥰</h1>
+    <button id="enter-button">28歲就此開始</button>
+    <p id="mute-toggle" class="mute-option">🔇 預設有聲音，點此切換為靜音，建議翻轉螢幕獲得更好體驗（ㄏㄏ）</p>
+  </div>
 
   <div id="intro-video-page" style="display: none;">
-    <video id="intro-video" src="videos/intro.mp4"  ></video>
+    <video id="intro-video" src="videos/intro.mp4" playsinline></video>
   </div>
 
   <div id="slideshow-page" style="display: none;">
     <div class="media-viewer">
       <div class="media-container">
         <img id="slideshow-image" src="" alt="回憶照片">
-        <video id="slideshow-video" src="" controls style="display: none;"></video>
+        <video id="slideshow-video" src="" controls style="display: none;" playsinline></video>
       </div>
       <p id="media-caption"></p>
       <div class="navigation-buttons">
@@ -58,18 +56,17 @@
   </div>
 
   <div id="outro-video-page" style="display: none;">
-    <video id="outro-video" src="videos/final.mp4"></video>
+    <video id="outro-video" src="videos/final.mp4" playsinline></video>
   </div>
 
+  <!-- 背景音樂 -->
+  <audio id="background-music" src="music.mp3" loop></audio>
+
+  <!-- 主腳本 -->
   <script src="script.js"></script>
-
-<audio id="background-music" src="music.mp3" loop></audio>
-
-<script src="script.js"></script>
 </body>
 </html>
 
-</html>
 
 
 
