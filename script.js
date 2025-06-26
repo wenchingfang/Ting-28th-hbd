@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { type: 'image', src: 'images/28.JPG', caption: '載我去搭客運，猜猜誰在中山東路9駕，救世主駕駛登場拯救我們' },
         { type: 'image', src: 'images/30.JPG', caption: '美好的露營❤️（ps.結束後幫某人慶生直接被臭臉後我跟你趕緊駕摩托車逃跑）' },
         { type: 'image', src: 'images/31.JPG', caption: '完美' },
-        { type: 'video', src: 'videos/mid.MP4', caption: '來自日本的小夢' },
+        { type: 'video', src: 'videos/mid.mp4', caption: '來自日本的小夢' },
     ];
 
     // --- 步驟 0.5: 音量設定 ---
