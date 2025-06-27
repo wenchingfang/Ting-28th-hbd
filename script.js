@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // --- 步驟 0.5: 音量設定 ---
-    const MUSIC_FULL_VOLUME = 1.0; 
+    const MUSIC_FULL_VOLUME = 0.8; 
     const MUSIC_DUCK_VOLUME = 0.01; 
 
     // --- 步驟 1: 獲取所有需要的「HTML元素」 ---
@@ -98,6 +98,7 @@ function displaySlideshowMedia(index) {
     enterButton.addEventListener('click', () => {
         landingPage.style.display = 'none';
         introVideoPage.style.display = 'flex';
+        introVideo.volume = 0.9
 
         // 嘗試同時播放背景音樂和（已靜音的）開頭影片
         backgroundMusic.play().catch(error => console.error("背景音樂播放失敗:", error));
