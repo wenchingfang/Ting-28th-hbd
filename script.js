@@ -98,7 +98,7 @@ function displaySlideshowMedia(index) {
     enterButton.addEventListener('click', () => {
         landingPage.style.display = 'none';
         introVideoPage.style.display = 'flex';
-        introVideo.volume = 0.9
+        introVideo.volume = 1.0
 
         // 嘗試同時播放背景音樂和（已靜音的）開頭影片
         backgroundMusic.play().catch(error => console.error("背景音樂播放失敗:", error));
@@ -123,7 +123,7 @@ function displaySlideshowMedia(index) {
         backgroundMusic.volume = MUSIC_DUCK_VOLUME; // 影片播放時，背景音樂變小聲
     });
     slideshowVideo.addEventListener('pause', () => {
-        backgroundMusic.volume = MUSIC_FULL_VOLUME; // 影片暫停時，恢復背景音樂音量
+        backgroundMusic.volume = MUSIC_DUCK_VOLUME; // 影片暫停時，恢復背景音樂音量
     });
     slideshowVideo.addEventListener('ended', () => {
         backgroundMusic.volume = MUSIC_FULL_VOLUME; // 影片結束時，恢復背景音樂音量
