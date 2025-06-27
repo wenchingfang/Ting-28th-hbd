@@ -99,7 +99,7 @@ function displaySlideshowMedia(index) {
         landingPage.style.display = 'none';
         introVideoPage.style.display = 'flex';
         introVideo.volume = 1.0
-
+        backgroundMusic.volume = MUSIC_DUCK_VOLUME;
         // 嘗試同時播放背景音樂和（已靜音的）開頭影片
         backgroundMusic.play().catch(error => console.error("背景音樂播放失敗:", error));
         introVideo.play().catch(error => console.error("開頭影片播放失敗:", error));
