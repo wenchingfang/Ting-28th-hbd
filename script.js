@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
-    // 【唯一的修正點】將此處的變數宣告和 getElementById 的目標，從 'show-letter-button' 改為 'show-outro-button'
     const showOutroButton = document.getElementById('show-outro-button');
     const showFinalVideoButton = document.getElementById('show-final-video-button');
 
