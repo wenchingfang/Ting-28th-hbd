@@ -155,5 +155,7 @@ function displaySlideshowMedia(index) {
         finalLetterPage.style.display = 'none';
         outroVideoPage.style.display = 'flex';
         backgroundMusic.pause(); // 播放最後影片前，完全暫停背景音樂
+        outroVideo.play().catch(error => console.error("結尾影片播放失敗:", error));
+
     });
 });
